@@ -1,0 +1,14 @@
+[workspace]
+members = [
+    "crates/core",
+    "crates/data",
+    # add more crates here later, e.g. "crates/api"
+]
+
+# Optional: enforce consistent Rust version
+[workspace.package]
+edition = "2021"
+
+[workspace.dependencies]
+# Shared dependencies across crates can go here
+serde = { version = "1.0", features = ["derive"] }

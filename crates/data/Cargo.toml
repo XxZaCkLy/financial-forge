@@ -1,6 +1,9 @@
 [package]
 name = "data"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
+serde = { workspace = true }
+sqlx = { version = "0.7", features = ["sqlite", "runtime-tokio-rustls", "macros"] }
+core = { path = "../core" } # link to your core crate
