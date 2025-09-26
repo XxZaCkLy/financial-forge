@@ -1,0 +1,12 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: Setup
+    init: |
+      curl -sSL https://sh.rustup.rs | sh -s -- -y
+      source $HOME/.cargo/env
+      npm install -g pnpm
+      pnpm install --prefix apps/mobile
+    command: |
+      cd apps/mobile && pnpm start -- --tunnel
