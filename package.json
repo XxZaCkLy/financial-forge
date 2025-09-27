@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@types/react": "^19.1.14",
     "pnpm": "^10.17.1"
   }
 }
