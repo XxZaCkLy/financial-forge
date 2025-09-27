@@ -5,7 +5,9 @@
     "jsx": "react-native",
     "strict": true,
     "moduleResolution": "bundler",
-    "customConditions": ["react-native"],
+    "customConditions": [
+      "react-native"
+    ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,5 +15,9 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src", "App.tsx"]
+  "include": [
+    "src",
+    "App.tsx"
+  ],
+  "extends": "expo/tsconfig.base"
 }

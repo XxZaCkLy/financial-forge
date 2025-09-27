@@ -1,4 +1,3 @@
-// src/context/DebtsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Debt, Plan } from "../types";
 import { loadDebts, saveDebts, loadPlan, savePlan } from "../storage";
@@ -15,6 +14,7 @@ type DebtsContextType = {
 
 const DebtsContext = createContext<DebtsContextType | null>(null);
 
+// Fallback demo data if storage is empty
 const mockDefaults: Debt[] = [
   { id: "1", name: "Credit Card", balance: 2500, interestRate: 19.99 },
   { id: "2", name: "Car Loan", balance: 12000, interestRate: 6.5 },
@@ -25,19 +25,23 @@ export function DebtsProvider({ children }: { children: React.ReactNode }) {
   const [debts, setDebts] = useState<Debt[]>([]);
   const [plan, setPlanState] = useState<Plan>("Avalanche");
 
+  // Load from AsyncStorage on mount
   useEffect(() => {
     (async () => {
       const storedDebts = await loadDebts();
       setDebts(storedDebts.length ? storedDebts : mockDefaults);
+
       const storedPlan = await loadPlan();
       if (storedPlan) setPlanState(storedPlan);
     })();
   }, []);
 
+  // Persist debts whenever they change
   useEffect(() => {
     saveDebts(debts);
   }, [debts]);
 
+  // Persist plan whenever it changes
   useEffect(() => {
     savePlan(plan);
   }, [plan]);
@@ -61,7 +65,9 @@ export function DebtsProvider({ children }: { children: React.ReactNode }) {
   const setPlan = (p: Plan) => setPlanState(p);
 
   return (
-    <DebtsContext.Provider value={{ debts, plan, setPlan, addDebt, updateDebt, removeDebt, clearAll }}>
+    <DebtsContext.Provider
+      value={{ debts, plan, setPlan, addDebt, updateDebt, removeDebt, clearAll }}
+    >
       {children}
     </DebtsContext.Provider>
   );
