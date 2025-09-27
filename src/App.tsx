@@ -8,8 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import HomeScreen from "./screens/HomeScreen";
 import DashboardScreen from "./screens/DashboardScreen";
-import DebtsScreen from "./screens/DebtsScreen";
-import SettingsScreen from "./screens/SettingsScreen";
+//import DebtsScreen from "./screens/DebtsScreen";
+//import SettingsScreen from "./screens/SettingsScreen";
 
 import { SettingsProvider, useSettings } from "./context/SettingsContext";
 import { DebtsProvider } from "./context/DebtsContext";
