@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { Debt, Plan } from "../types";
-import { loadDebts, saveDebts, loadPlan, savePlan } from "../storage";
 
 type DebtsContextType = {
   debts: Debt[];
@@ -21,25 +20,20 @@ const mockDefaults: Debt[] = [
 ];
 
 export function DebtsProvider({ children }: { children: React.ReactNode }) {
-  const [debts, setDebts] = useState<Debt[]>([]);
+  const [debts, setDebts] = useState<Debt[]>(mockDefaults);
   const [plan, setPlanState] = useState<Plan>("Avalanche");
 
-  useEffect(() => {
-    (async () => {
-      const ds = await loadDebts();
-      setDebts(ds.length ? ds : mockDefaults);
-      const p = await loadPlan();
-      if (p) setPlanState(p);
-    })();
-  }, []);
+  const addDebt = (d: Omit<Debt, "id">) =>
+    setDebts(prev => [...prev, { ...d, id: Date.now().toString() }]);
 
-  useEffect(() => void saveDebts(debts), [debts]);
-  useEffect(() => void savePlan(plan), [plan]);
+  const updateDebt = (u: Debt) =>
+    setDebts(prev => prev.map(d => (d.id === u.id ? u : d)));
 
-  const addDebt = (d: Omit<Debt, "id">) => setDebts(prev => [...prev, { ...d, id: Date.now().toString() }]);
-  const updateDebt = (u: Debt) => setDebts(prev => prev.map(d => (d.id === u.id ? u : d)));
-  const removeDebt = (id: string) => setDebts(prev => prev.filter(d => d.id !== id));
+  const removeDebt = (id: string) =>
+    setDebts(prev => prev.filter(d => d.id !== id));
+
   const clearAll = () => setDebts([]);
+
   const setPlan = (p: Plan) => setPlanState(p);
 
   return (

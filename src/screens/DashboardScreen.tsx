@@ -1,24 +1,18 @@
-import { payoffRoadmap } from "../utils/payoff";
+import React from "react";
+import { View, Text } from "react-native";
+import { useDebts } from "../context/DebtsContext";
+import { totalBalance } from "../utils/payoff";
 
-const avalanchePlan = payoffRoadmap(debts, payment, "Avalanche");
-const snowballPlan = payoffRoadmap(debts, payment, "Snowball");
+export default function DashboardScreen() {
+  const { debts, plan } = useDebts();
+  const total = totalBalance(debts);
 
-<View style={{ marginTop: spacing.lg }}>
-  <Text style={{ fontSize: 18, color: c.text, marginBottom: spacing.sm }}>
-    Avalanche Plan Roadmap
-  </Text>
-  {avalanchePlan.steps.map((s, i) => (
-    <Text key={i} style={{ color: c.muted }}>
-      Month {s.month}: {s.debt} paid off (Remaining: ${Math.round(s.remaining).toLocaleString()})
-    </Text>
-  ))}
-
-  <Text style={{ fontSize: 18, color: c.text, marginVertical: spacing.sm }}>
-    Snowball Plan Roadmap
-  </Text>
-  {snowballPlan.steps.map((s, i) => (
-    <Text key={i} style={{ color: c.muted }}>
-      Month {s.month}: {s.debt} paid off (Remaining: ${Math.round(s.remaining).toLocaleString()})
-    </Text>
-  ))}
-</View>
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ fontSize: 20, marginBottom: 10 }}>Dashboard</Text>
+      <Text>Active plan: {plan}</Text>
+      <Text>Total balance: ${total.toLocaleString()}</Text>
+      <Text>Debts tracked: {debts.length}</Text>
+    </View>
+  );
+}
