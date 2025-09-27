@@ -25,3 +25,9 @@ tasks:
 
   - name: Auto-update dependencies
     init: ./update-deps.sh
+
+  - name: Install dependencies
+    init: pnpm install
+    
+  - name: Start Expo
+    command: pnpm start
