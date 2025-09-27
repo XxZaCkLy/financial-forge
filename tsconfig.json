@@ -4,7 +4,8 @@
     "module": "esnext",
     "jsx": "react-native",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",          // 👈 required for Expo SDK 49+
+    "customConditions": ["react-native"],   // 👈 safe to keep for RN web compatibility
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -12,9 +13,5 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": [
-    "src",
-    "App.tsx"
-  ],
-  "extends": "expo/tsconfig.base"
+  "include": ["src", "App.tsx"]
 }

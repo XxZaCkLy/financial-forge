@@ -1,11 +1,11 @@
-// src/screens/DashboardScreen.tsx
+// src/screens/AddDebtScreen.tsx
 import React from "react";
 import { View, Text } from "react-native";
 
-export default function DashboardScreen() {
+export default function AddDebtScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ fontSize: 22 }}>📊 Dashboard Screen</Text>
+      <Text>Add Debt Form (coming soon)</Text>
     </View>
   );
 }

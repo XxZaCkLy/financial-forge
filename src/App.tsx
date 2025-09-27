@@ -1,7 +1,5 @@
 // src/App.tsx
-// Important: gesture-handler must be imported before navigation
 import "react-native-gesture-handler";
-// Polyfill for UUID and crypto randomness on web
 import "react-native-get-random-values";
 
 import React from "react";
@@ -13,20 +11,21 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import DebtsScreen from "./screens/DebtsScreen";
+import AddDebtScreen from "./screens/AddDebtScreen";
+import DebtDetailsScreen from "./screens/DebtDetailsScreen";
+import AvalanchePlanScreen from "./screens/AvalanchePlanScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Home stack (keeps room for deeper screens later)
-function HomeStack() {
+function DebtsStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="HomeMain"
-        component={HomeScreen}
-        options={{ title: "Home" }}
-      />
-      {/* Add more Home-related stack screens here */}
+      <Stack.Screen name="DebtsMain" component={DebtsScreen} options={{ title: "My Debts" }} />
+      <Stack.Screen name="AddDebt" component={AddDebtScreen} options={{ title: "Add Debt" }} />
+      <Stack.Screen name="DebtDetails" component={DebtDetailsScreen} options={{ title: "Debt Details" }} />
+      <Stack.Screen name="AvalanchePlan" component={AvalanchePlanScreen} options={{ title: "Avalanche Plan" }} />
     </Stack.Navigator>
   );
 }
@@ -38,19 +37,18 @@ export default function App() {
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarIcon: ({ color, size }) => {
-            // Default icon name
             let iconName: keyof typeof Ionicons.glyphMap = "home";
-
             if (route.name === "Home") iconName = "home";
             if (route.name === "Dashboard") iconName = "bar-chart";
+            if (route.name === "Debts") iconName = "cash";
             if (route.name === "Settings") iconName = "settings";
-
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
       >
-        <Tab.Screen name="Home" component={HomeStack} />
+        <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Dashboard" component={DashboardScreen} />
+        <Tab.Screen name="Debts" component={DebtsStack} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
