@@ -11,26 +11,18 @@ const SettingsContext = createContext<SettingsContextType | null>(null);
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  // Load saved theme on mount
   useEffect(() => {
     (async () => {
-      const stored = await loadTheme();
-      if (stored) setTheme(stored);
+      const t = await loadTheme();
+      if (t) setTheme(t);
     })();
   }, []);
 
-  // Persist theme whenever it changes
-  useEffect(() => {
-    saveTheme(theme);
-  }, [theme]);
+  useEffect(() => void saveTheme(theme), [theme]);
 
   const toggleTheme = () => setTheme(t => (t === "light" ? "dark" : "light"));
 
-  return (
-    <SettingsContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={{ theme, toggleTheme }}>{children}</SettingsContext.Provider>;
 }
 
 export function useSettings() {

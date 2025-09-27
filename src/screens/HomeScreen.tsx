@@ -1,4 +1,3 @@
-// src/screens/HomeScreen.tsx
 import React from "react";
 import { View, Text, Button } from "react-native";
 import { useDebts } from "../context/DebtsContext";
@@ -11,6 +10,7 @@ export default function HomeScreen({ navigation }: any) {
   const { theme } = useSettings();
   const c = colors[theme];
 
+  // Calculate totals
   const total = totalBalance(debts);
   const avgRate = debts.length
     ? (debts.reduce((sum, d) => sum + d.interestRate, 0) / debts.length).toFixed(2)

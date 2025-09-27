@@ -1,9 +1,21 @@
-// src/utils/payoff.ts
-export function payoffRoadmap(
+import { Debt, Plan } from "../types";
+
+/**
+ * Sum all balances
+ */
+export function totalBalance(debts: Debt[]) {
+  return debts.reduce((sum, d) => sum + d.balance, 0);
+}
+
+/**
+ * Simulate monthly payoff for Avalanche or Snowball plan.
+ */
+export function simulatePayoff(
   debtsInput: Debt[],
   monthlyPayment: number,
-  plan: Plan
-): { steps: { month: number; debt: string; remaining: number }[] } {
+  plan: Plan,
+  maxMonths = 600
+): { months: number; series: number[] } {
   const debts = debtsInput.map(d => ({ ...d }));
   const order =
     plan === "Avalanche"
@@ -12,11 +24,11 @@ export function payoffRoadmap(
 
   debts.sort(order);
 
-  const steps: { month: number; debt: string; remaining: number }[] = [];
-  let month = 0;
+  const series: number[] = [];
+  let months = 0;
 
-  while (debts.some(d => d.balance > 0) && month < 600) {
-    month++;
+  while (debts.some(d => d.balance > 0) && months < maxMonths) {
+    months++;
     let remaining = monthlyPayment;
 
     for (const d of debts) {
@@ -26,12 +38,12 @@ export function payoffRoadmap(
       const applied = Math.min(remaining, due);
       d.balance = Math.max(0, due - applied);
       remaining -= applied;
-      if (d.balance === 0) {
-        steps.push({ month, debt: d.name, remaining: debts.reduce((s, x) => s + x.balance, 0) });
-      }
       if (remaining <= 0) break;
     }
+
+    const total = debts.reduce((sum, d) => sum + d.balance, 0);
+    series.push(total);
   }
 
-  return { steps };
+  return { months, series };
 }

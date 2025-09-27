@@ -14,7 +14,6 @@ type DebtsContextType = {
 
 const DebtsContext = createContext<DebtsContextType | null>(null);
 
-// Fallback demo data if storage is empty
 const mockDefaults: Debt[] = [
   { id: "1", name: "Credit Card", balance: 2500, interestRate: 19.99 },
   { id: "2", name: "Car Loan", balance: 12000, interestRate: 6.5 },
@@ -25,49 +24,26 @@ export function DebtsProvider({ children }: { children: React.ReactNode }) {
   const [debts, setDebts] = useState<Debt[]>([]);
   const [plan, setPlanState] = useState<Plan>("Avalanche");
 
-  // Load from AsyncStorage on mount
   useEffect(() => {
     (async () => {
-      const storedDebts = await loadDebts();
-      setDebts(storedDebts.length ? storedDebts : mockDefaults);
-
-      const storedPlan = await loadPlan();
-      if (storedPlan) setPlanState(storedPlan);
+      const ds = await loadDebts();
+      setDebts(ds.length ? ds : mockDefaults);
+      const p = await loadPlan();
+      if (p) setPlanState(p);
     })();
   }, []);
 
-  // Persist debts whenever they change
-  useEffect(() => {
-    saveDebts(debts);
-  }, [debts]);
+  useEffect(() => void saveDebts(debts), [debts]);
+  useEffect(() => void savePlan(plan), [plan]);
 
-  // Persist plan whenever it changes
-  useEffect(() => {
-    savePlan(plan);
-  }, [plan]);
-
-  const addDebt = (d: Omit<Debt, "id">) => {
-    setDebts(prev => [...prev, { ...d, id: Date.now().toString() }]);
-  };
-
-  const updateDebt = (updated: Debt) => {
-    setDebts(prev => prev.map(d => (d.id === updated.id ? updated : d)));
-  };
-
-  const removeDebt = (id: string) => {
-    setDebts(prev => prev.filter(d => d.id !== id));
-  };
-
-  const clearAll = () => {
-    setDebts([]);
-  };
-
+  const addDebt = (d: Omit<Debt, "id">) => setDebts(prev => [...prev, { ...d, id: Date.now().toString() }]);
+  const updateDebt = (u: Debt) => setDebts(prev => prev.map(d => (d.id === u.id ? u : d)));
+  const removeDebt = (id: string) => setDebts(prev => prev.filter(d => d.id !== id));
+  const clearAll = () => setDebts([]);
   const setPlan = (p: Plan) => setPlanState(p);
 
   return (
-    <DebtsContext.Provider
-      value={{ debts, plan, setPlan, addDebt, updateDebt, removeDebt, clearAll }}
-    >
+    <DebtsContext.Provider value={{ debts, plan, setPlan, addDebt, updateDebt, removeDebt, clearAll }}>
       {children}
     </DebtsContext.Provider>
   );
