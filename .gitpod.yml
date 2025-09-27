@@ -10,3 +10,18 @@ tasks:
       pnpm install --prefix apps/mobile
     command: |
       cd apps/mobile && pnpm start -- --tunnel
+
+  - name: Sync with origin/main
+    init: ./git-sync.sh "Auto-sync on workspace start"
+
+  - name: Sync with origin/main
+    init: ./git-sync.sh "Auto-sync on workspace start"
+
+  - name: Start Expo server
+    command: pnpm start -- --tunnel
+    
+  - name: Install pnpm
+    init: npm install -g pnpm
+
+  - name: Auto-update dependencies
+    init: ./update-deps.sh
