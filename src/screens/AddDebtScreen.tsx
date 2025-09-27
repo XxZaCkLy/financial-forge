@@ -1,41 +1,53 @@
-import { useState } from "react";
+// src/screens/AddDebtScreen.tsx
+import React, { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
-import { useDebts } from "../context/DebtContext";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function AddDebtScreen({ navigation }) {
-  const { addDebt } = useDebts();
+type Props = NativeStackScreenProps<any>;
+
+export default function AddDebtScreen({ route, navigation }: Props) {
+  const { setDebts } = route.params;
+
   const [name, setName] = useState("");
   const [balance, setBalance] = useState("");
-  const [rate, setRate] = useState("");
+  const [interestRate, setInterestRate] = useState("");
 
   const handleAdd = () => {
-    if (!name || !balance || !rate) return;
-    addDebt({ name, balance: parseFloat(balance), rate: parseFloat(rate) });
+    if (!name || !balance || !interestRate) return;
+    setDebts((prev: any) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        name,
+        balance: parseFloat(balance),
+        interestRate: parseFloat(interestRate),
+      },
+    ]);
     navigation.goBack();
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 22, fontWeight: "bold" }}>Add Debt</Text>
+    <View style={{ flex: 1, padding: 16 }}>
+      <Text style={{ fontSize: 22, marginBottom: 12 }}>Add New Debt</Text>
       <TextInput
         placeholder="Name"
         value={name}
         onChangeText={setName}
-        style={{ borderWidth: 1, marginVertical: 5, padding: 8 }}
+        style={{ borderWidth: 1, marginBottom: 12, padding: 8 }}
       />
       <TextInput
         placeholder="Balance"
         value={balance}
         onChangeText={setBalance}
         keyboardType="numeric"
-        style={{ borderWidth: 1, marginVertical: 5, padding: 8 }}
+        style={{ borderWidth: 1, marginBottom: 12, padding: 8 }}
       />
       <TextInput
-        placeholder="Rate (%)"
-        value={rate}
-        onChangeText={setRate}
+        placeholder="Interest Rate (%)"
+        value={interestRate}
+        onChangeText={setInterestRate}
         keyboardType="numeric"
-        style={{ borderWidth: 1, marginVertical: 5, padding: 8 }}
+        style={{ borderWidth: 1, marginBottom: 12, padding: 8 }}
       />
       <Button title="Save" onPress={handleAdd} />
     </View>

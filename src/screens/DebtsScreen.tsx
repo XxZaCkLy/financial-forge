@@ -1,9 +1,16 @@
 // src/screens/DebtsScreen.tsx
-import React, { useState } from "react";
-import { View, Text, FlatList, Button, TouchableOpacity, SegmentedControlIOS, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-// Mock debts
 type Debt = {
   id: string;
   name: string;
@@ -11,45 +18,71 @@ type Debt = {
   interestRate: number;
 };
 
-const mockDebts: Debt[] = [
-  { id: "1", name: "Credit Card", balance: 2500, interestRate: 19.99 },
-  { id: "2", name: "Car Loan", balance: 12000, interestRate: 6.5 },
-  { id: "3", name: "Student Loan", balance: 18000, interestRate: 4.2 },
-];
-
 type Props = NativeStackScreenProps<any>;
 
+const STORAGE_KEY = "debts";
+const PLAN_KEY = "plan";
+
 export default function DebtsScreen({ navigation }: Props) {
+  const [debts, setDebts] = useState<Debt[]>([]);
   const [plan, setPlan] = useState<"Avalanche" | "Snowball">("Avalanche");
+
+  // Load debts + plan from storage
+  useEffect(() => {
+    (async () => {
+      try {
+        const storedDebts = await AsyncStorage.getItem(STORAGE_KEY);
+        const storedPlan = await AsyncStorage.getItem(PLAN_KEY);
+        if (storedDebts) setDebts(JSON.parse(storedDebts));
+        else {
+          // fallback mock data
+          setDebts([
+            { id: "1", name: "Credit Card", balance: 2500, interestRate: 19.99 },
+            { id: "2", name: "Car Loan", balance: 12000, interestRate: 6.5 },
+            { id: "3", name: "Student Loan", balance: 18000, interestRate: 4.2 },
+          ]);
+        }
+        if (storedPlan) setPlan(storedPlan as "Avalanche" | "Snowball");
+      } catch (e) {
+        console.error("Failed to load debts", e);
+      }
+    })();
+  }, []);
+
+  // Save debts when they change
+  useEffect(() => {
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(debts));
+  }, [debts]);
+
+  // Save plan when it changes
+  useEffect(() => {
+    AsyncStorage.setItem(PLAN_KEY, plan);
+  }, [plan]);
 
   // Sort debts based on plan
   const sortedDebts =
     plan === "Avalanche"
-      ? [...mockDebts].sort((a, b) => b.interestRate - a.interestRate)
-      : [...mockDebts].sort((a, b) => a.balance - b.balance);
+      ? [...debts].sort((a, b) => b.interestRate - a.interestRate)
+      : [...debts].sort((a, b) => a.balance - b.balance);
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <Button title="➕ Add Debt" onPress={() => navigation.navigate("AddDebt")} />
+      <Button title="➕ Add Debt" onPress={() => navigation.navigate("AddDebt", { setDebts })} />
 
       {/* Plan toggle */}
-      {Platform.OS === "ios" ? (
-        <SegmentedControlIOS
-          values={["Avalanche", "Snowball"]}
-          selectedIndex={plan === "Avalanche" ? 0 : 1}
-          onChange={(event) => {
-            const value = event.nativeEvent.value as "Avalanche" | "Snowball";
-            setPlan(value);
-          }}
-          style={{ marginVertical: 12 }}
+      <View style={{ flexDirection: "row", justifyContent: "center", marginVertical: 12 }}>
+        <Button
+          title="Avalanche"
+          onPress={() => setPlan("Avalanche")}
+          color={plan === "Avalanche" ? "blue" : "gray"}
         />
-      ) : (
-        <View style={{ flexDirection: "row", justifyContent: "center", marginVertical: 12 }}>
-          <Button title="Avalanche" onPress={() => setPlan("Avalanche")} color={plan === "Avalanche" ? "blue" : "gray"} />
-          <View style={{ width: 12 }} />
-          <Button title="Snowball" onPress={() => setPlan("Snowball")} color={plan === "Snowball" ? "blue" : "gray"} />
-        </View>
-      )}
+        <View style={{ width: 12 }} />
+        <Button
+          title="Snowball"
+          onPress={() => setPlan("Snowball")}
+          color={plan === "Snowball" ? "blue" : "gray"}
+        />
+      </View>
 
       <Text style={{ fontSize: 20, marginBottom: 8, textAlign: "center" }}>
         {plan} Plan Order
