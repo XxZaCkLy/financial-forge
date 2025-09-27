@@ -1,16 +1,9 @@
 // src/utils/payoff.ts
-import { Debt, Plan } from "../types";
-
-/**
- * Simulate monthly payoff for Avalanche or Snowball plan.
- * Returns months to payoff and a time series of total balance per month.
- */
-export function simulatePayoff(
+export function payoffRoadmap(
   debtsInput: Debt[],
   monthlyPayment: number,
-  plan: Plan,
-  maxMonths = 600
-): { months: number; series: number[] } {
+  plan: Plan
+): { steps: { month: number; debt: string; remaining: number }[] } {
   const debts = debtsInput.map(d => ({ ...d }));
   const order =
     plan === "Avalanche"
@@ -19,11 +12,11 @@ export function simulatePayoff(
 
   debts.sort(order);
 
-  const series: number[] = [];
-  let months = 0;
+  const steps: { month: number; debt: string; remaining: number }[] = [];
+  let month = 0;
 
-  while (debts.some(d => d.balance > 0) && months < maxMonths) {
-    months += 1;
+  while (debts.some(d => d.balance > 0) && month < 600) {
+    month++;
     let remaining = monthlyPayment;
 
     for (const d of debts) {
@@ -33,16 +26,12 @@ export function simulatePayoff(
       const applied = Math.min(remaining, due);
       d.balance = Math.max(0, due - applied);
       remaining -= applied;
+      if (d.balance === 0) {
+        steps.push({ month, debt: d.name, remaining: debts.reduce((s, x) => s + x.balance, 0) });
+      }
       if (remaining <= 0) break;
     }
-
-    const total = debts.reduce((sum, d) => sum + d.balance, 0);
-    series.push(total);
   }
 
-  return { months, series };
-}
-
-export function totalBalance(debts: Debt[]) {
-  return debts.reduce((sum, d) => sum + d.balance, 0);
+  return { steps };
 }
