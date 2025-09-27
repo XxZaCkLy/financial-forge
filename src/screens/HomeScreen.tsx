@@ -1,24 +1,15 @@
+// src/screens/HomeScreen.tsx
+import React from "react";
 import { View, Text, Button } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function HomeScreen({ navigation }) {
+type Props = NativeStackScreenProps<any>;
+
+export default function HomeScreen({ navigation }: Props) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
-        Financial Forge
-      </Text>
-      <Button
-        title="View My Debts"
-        onPress={() => navigation.navigate("Debts")}
-      />
-      <Button title="Add Debt"
-       onPress={() => navigation.navigate("AddDebt")}
-      />
-      <View style={{ marginTop: 10 }}>
-        <Button
-          title="Settings"
-          onPress={() => navigation.navigate("Settings")}
-        />
-      </View>
+      <Text style={{ fontSize: 22 }}>🏠 Home Screen</Text>
+      <Button title="Go to Settings" onPress={() => navigation.navigate("Settings")} />
     </View>
   );
 }
