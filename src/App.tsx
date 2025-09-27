@@ -7,7 +7,6 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-
 import HomeScreen from "./screens/HomeScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import SettingsScreen from "./screens/SettingsScreen";
@@ -15,7 +14,6 @@ import DebtsScreen from "./screens/DebtsScreen";
 import AddDebtScreen from "./screens/AddDebtScreen";
 import EditDebtScreen from "./screens/EditDebtScreen";
 import DebtDetailsScreen from "./screens/DebtDetailsScreen";
-
 import { SettingsProvider, useSettings } from "./context/SettingsContext";
 import { DebtsProvider } from "./context/DebtsContext";
 
