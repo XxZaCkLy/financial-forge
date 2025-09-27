@@ -10,6 +10,9 @@ export default function HomeScreen({ navigation }) {
         title="View My Debts"
         onPress={() => navigation.navigate("Debts")}
       />
+      <Button title="Add Debt"
+       onPress={() => navigation.navigate("AddDebt")}
+      />
       <View style={{ marginTop: 10 }}>
         <Button
           title="Settings"
