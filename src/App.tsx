@@ -50,3 +50,5 @@ export default function App() {
         <Tabs />
       </DebtsProvider>
     </SettingsProvider>
+  );
+}
