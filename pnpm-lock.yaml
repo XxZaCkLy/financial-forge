@@ -8,11 +8,20 @@ importers:
 
   .:
     devDependencies:
+      '@types/react':
+        specifier: ^19.1.14
+        version: 19.1.14
       pnpm:
         specifier: ^10.17.1
         version: 10.17.1
 
 packages:
+
+  '@types/react@19.1.14':
+    resolution: {integrity: sha512-ukd93VGzaNPMAUPy0gRDSC57UuQbnH9Kussp7HBjM06YFi9uZTFhOvMSO2OKqXm1rSgzOE+pVx1k1PYHGwlc8Q==}
+
+  csstype@3.1.3:
+    resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
   pnpm@10.17.1:
     resolution: {integrity: sha512-F8Vg/KSGeulHOjiZrYSogzSRTzeb5G1FXL+S5c9LOdNJhdRS0lg7rxmWf6dstcF7yeJFUp0LmHRXIapyAOyveg==}
@@ -20,5 +29,11 @@ packages:
     hasBin: true
 
 snapshots:
+
+  '@types/react@19.1.14':
+    dependencies:
+      csstype: 3.1.3
+
+  csstype@3.1.3: {}
 
   pnpm@10.17.1: {}
