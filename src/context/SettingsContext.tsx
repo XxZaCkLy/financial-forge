@@ -1,4 +1,3 @@
-// src/context/SettingsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { loadTheme, saveTheme } from "../storage";
 
@@ -12,6 +11,7 @@ const SettingsContext = createContext<SettingsContextType | null>(null);
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
+  // Load saved theme on mount
   useEffect(() => {
     (async () => {
       const stored = await loadTheme();
@@ -19,6 +19,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
+  // Persist theme whenever it changes
   useEffect(() => {
     saveTheme(theme);
   }, [theme]);
