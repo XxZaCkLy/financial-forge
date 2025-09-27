@@ -2,8 +2,9 @@
 members = [
     "crates/core",
     "crates/data",
-    # add more crates here later, e.g. "crates/api"
+    "crates/api"
 ]
+resolver = "2"
 
 # Optional: enforce consistent Rust version
 [workspace.package]
