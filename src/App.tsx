@@ -28,8 +28,8 @@ function Tabs() {
             let icon: keyof typeof Ionicons.glyphMap = "home";
             if (route.name === "Home") icon = "home";
             if (route.name === "Dashboard") icon = "bar-chart";
-            if (route.name === "Debts") icon = "cash";
-            if (route.name === "Settings") icon = "settings";
+           // if (route.name === "Debts") icon = "cash";
+            //if (route.name === "Settings") icon = "settings";
             return <Ionicons name={icon} size={size} color={color} />;
           },
         })}
